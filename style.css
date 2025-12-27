@@ -12,8 +12,8 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: "Poppins", sans-serif;
-  background: radial-gradient(circle at top, #2b1055, var(--dark));
-  color: white;
+  background: url("images/stars18.jpg") center/cover no-repeat fixed;
+  color: rgb(245, 165, 232);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -23,11 +23,10 @@ body {
 .stars {
   position: fixed;
   inset: 0;
-  background-repeat: repeat;
-  background-size: 200px 200px;
-  opacity: 0.45;
-  animation: move 60s linear infinite;
-  transition: background-image 1.5s ease-in-out;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  z-index: 1;
 }
 
 @keyframes move {
@@ -41,27 +40,30 @@ body {
 
 /* CARD */
 .card {
-  width: 90%;
-  max-width: 420px;
-  background: rgba(0, 0, 0, 0.55);
-  border-radius: 20px;
-  padding: 30px 25px 40px;
+  width: 92%;
+  max-width: 420px; /* khung ngang ra */
+  background: rgba(0, 0, 0, 0.38); /* trong suốt hơn */
+  border-radius: 22px;
+  padding: 32px 40px 42px;
   text-align: center;
-  box-shadow: 0 0 40px rgba(212, 175, 55, 0.25);
-  backdrop-filter: blur(8px);
+  box-shadow: 0 0 45px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(10px);
   z-index: 2;
 }
 
 .title {
   font-family: "Playfair Display", serif;
   font-size: 26px;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
+  color: #ffd6e7;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
 }
 
 .subtitle {
-  font-size: 14px;
-  opacity: 0.8;
-  margin-bottom: 25px;
+  font-size: 13px;
+  opacity: 0.9;
+  margin-bottom: 22px;
+  color: #f5c3d9;
 }
 
 input {
@@ -85,53 +87,48 @@ button {
   cursor: pointer;
 }
 
-/* GIFT */
-.gift {
-  width: 140px;
-  height: 140px;
-  margin: 30px auto 0;
-  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+.heart {
+  width: 55px;
+  height: 55px;
+  background: #e48ba4;
   position: relative;
+  margin: 20px auto 0;
+  transform: rotate(-45deg);
   cursor: pointer;
-  animation: float 2s ease-in-out infinite;
-  box-shadow: 0 0 25px rgba(255, 75, 43, 0.7);
+  animation: heartbeat 1.8s infinite;
+  box-shadow: 0 0 10px rgba(227, 152, 173, 0.65);
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
+.heart::before,
+.heart::after {
+  content: "";
+  width: 55px;
+  height: 55px;
+  background: #e48ba4;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.heart::before {
+  top: -27.5px;
+  left: 0;
+}
+
+.heart::after {
+  left: 27.5px;
+  top: 0;
+}
+
+@keyframes heartbeat {
+  0% {
+    transform: rotate(-45deg) scale(1);
   }
   50% {
-    transform: translateY(-12px);
+    transform: rotate(-45deg) scale(1.04);
   }
-}
-
-.gift::before,
-.gift::after {
-  content: "";
-  position: absolute;
-  background: var(--gold);
-}
-.gift::before {
-  width: 100%;
-  height: 18px;
-  top: 61px;
-}
-.gift::after {
-  width: 18px;
-  height: 100%;
-  left: 61px;
-}
-
-/* MESSAGE */
-.message {
-  display: none;
-  margin-top: 25px;
-  font-family: "Playfair Display", serif;
-  font-size: 18px;
-  line-height: 1.7;
-  animation: fadeUp 2.5s forwards;
+  100% {
+    transform: rotate(-45deg) scale(1);
+  }
 }
 
 @keyframes fadeUp {
@@ -147,6 +144,51 @@ button {
 
 canvas {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99;
+}
+
+.poetry-container {
+  position: fixed;
+  top: 0;
+  left: 5%;
+  width: 40%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.message {
+  display: none;
+  text-align: left;
+  color: #ffffff;
+  font-family: "Playfair Display", serif;
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.stanza {
+  margin-bottom: 25px;
+  line-height: 1.8;
+  font-size: 16px;
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: all 2s ease;
+}
+
+.stanza.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.fade-out {
+  opacity: 0 !important;
+  transition: opacity 1s ease;
   pointer-events: none;
 }

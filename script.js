@@ -14,30 +14,47 @@ function unlock() {
   }
 }
 
-// OPEN GIFT
 function openGift() {
-  document.querySelector(".gift").style.display = "none";
-  document.getElementById("msg").style.display = "block";
+  const giftCard = document.getElementById("giftCard");
+  giftCard.classList.add("fade-out");
+
+  const msg = document.getElementById("msg");
+  msg.style.display = "block";
+
+  const stanzas = document.querySelectorAll(".stanza");
+  setTimeout(() => {
+    stanzas.forEach((s) => {
+      s.classList.add("show");
+    });
+  }, 500);
+
+  document.querySelector(".stars").style.opacity = "1";
   document.getElementById("music").play();
   startFX();
 }
 
-// CONFETTI
+// --- PHẦN THAY THẾ CHO HIỆU ỨNG HẠT BAY (EMOJI) ---
 const canvas = document.getElementById("fx");
 const ctx = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-let ps = [];
+// Cấu hình các loại hạt bay
+const petals = ["🍀", "🌸", "🌸", "✨"];
+let particles = [];
 
 function startFX() {
-  for (let i = 0; i < 180; i++) {
-    ps.push({
+  // Tăng lên 500 hạt để tạo cảm giác dày đặc
+  for (let i = 0; i < 50; i++) {
+    particles.push({
       x: Math.random() * canvas.width,
-      y: -20,
-      r: Math.random() * 6 + 4,
-      v: Math.random() * 4 + 2,
-      c: `hsl(${Math.random() * 360},100%,65%)`,
+      y: Math.random() * -canvas.height,
+      size: Math.random() * 13 + 14, // Tăng kích thước hạt cho rõ nét
+      speed: Math.random() * 10 + 2, // Tăng tốc độ rơi tối thiểu (2) và tối đa (5)
+      wind: Math.random() * 10 - 1, // Tăng độ lướt ngang cho sinh động
+      emoji: petals[Math.floor(Math.random() * petals.length)],
+      rotation: Math.random() * 360,
+      spin: Math.random() * 10 - 2, // Tăng tốc độ xoay hạt
     });
   }
   animate();
@@ -45,37 +62,38 @@ function startFX() {
 
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ps.forEach((p) => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.c;
-    ctx.fill();
-    p.y += p.v;
+
+  // Thêm đổ bóng để hạt sắc nét, không bị mờ hòa vào nền
+  ctx.shadowBlur = 1;
+  ctx.shadowColor = "rgba(93, 87, 87, 0.5)";
+
+  particles.forEach((p) => {
+    ctx.save();
+    ctx.font = `${p.size}px serif`;
+    ctx.translate(p.x, p.y);
+    ctx.rotate((p.rotation * Math.PI) / 180);
+
+    // Vẽ hạt
+    ctx.fillText(p.emoji, -p.size / 2, p.size / 2);
+    ctx.restore();
+
+    // Cập nhật vị trí
+    p.y += p.speed;
+    p.x += p.wind;
+    p.rotation += p.spin;
+
+    // Reset hạt khi rơi hết màn hình
+    if (p.y > canvas.height) {
+      p.y = -50; // Đưa hạt lên cao hẳn để rơi lại
+      p.x = Math.random() * canvas.width;
+    }
   });
+
   requestAnimationFrame(animate);
 }
 
-const images = [
-  "images/stars.jpg",
-  "images/stars1.jpg",
-  "images/stars3.jpg",
-  "images/stars4.jpg",
-  "images/stars5.jpg",
-  "images/stars6.jpg",
-  "images/stars7.jpg",
-  "images/stars8.jpg",
-  "images/stars9.jpg",
-  "images/stars10.jpg",
-  "images/stars11.jpg",
-  "images/stars13.jpg",
-  "images/stars14.jpg",
-  "images/stars15.jpg",
-  "images/stars16.jpg",
-  "images/stars17.jpg",
-  "images/stars18.jpg",
-  "images/stars19.jpg",
-];
-
+// --- PHẦN ĐỔI ẢNH NỀN ---
+const starImages = ["images/stars10.jpg"];
 let currentIndex = 0;
 const starsEl = document.querySelector(".stars");
 
@@ -85,5 +103,4 @@ function changeBackground() {
 }
 
 changeBackground();
-
 setInterval(changeBackground, 6000);
